@@ -1,0 +1,2 @@
+C:\Users\Freek\Documents\HonoursProject\Sample\Farseer Physics Engine 3.5 Samples\Farseer Physics DebugView 3.5\Content\obj\x86\Debug\DebugView Content.contentprojResolveAssemblyReference.cache
+C:\Users\Freek\Documents\HonoursProject\FPE Sample\Farseer Physics Engine 3.5 Samples\Farseer Physics DebugView 3.5\Content\obj\x86\Debug\DebugView Content.contentprojResolveAssemblyReference.cache
