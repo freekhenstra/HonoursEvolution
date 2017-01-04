@@ -7,7 +7,7 @@
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
       <Options>None</Options>
-      <Output>C:\Users\Freek\Documents\HonoursProject\FPE Sample\Farseer Physics Engine 3.5 Samples\Farseer Physics DebugView 3.5\bin\x86\Debug\Content\Font.xnb</Output>
+      <Output>C:\Users\Freek\Documents\HonoursProject\HonoursEvolution\Farseer Physics Engine 3.5\Farseer Physics DebugView 3.5\bin\x86\Debug\Content\Font.xnb</Output>
       <Time>2013-08-24T03:59:11.6621122+02:00</Time>
     </Item>
     <BuildSuccessful>true</BuildSuccessful>
@@ -17,10 +17,10 @@
       <TargetProfile>Reach</TargetProfile>
       <BuildConfiguration>Debug</BuildConfiguration>
       <CompressContent>false</CompressContent>
-      <RootDirectory>C:\Users\Freek\Documents\HonoursProject\FPE Sample\Farseer Physics Engine 3.5 Samples\Farseer Physics DebugView 3.5\Content\</RootDirectory>
-      <LoggerRootDirectory>C:\Users\Freek\Documents\HonoursProject\FPE Sample\Farseer Physics Engine 3.5 Samples\Farseer Physics DebugView 3.5\</LoggerRootDirectory>
-      <IntermediateDirectory>C:\Users\Freek\Documents\HonoursProject\FPE Sample\Farseer Physics Engine 3.5 Samples\Farseer Physics DebugView 3.5\obj\x86\Debug\</IntermediateDirectory>
-      <OutputDirectory>C:\Users\Freek\Documents\HonoursProject\FPE Sample\Farseer Physics Engine 3.5 Samples\Farseer Physics DebugView 3.5\bin\x86\Debug\Content\</OutputDirectory>
+      <RootDirectory>C:\Users\Freek\Documents\HonoursProject\HonoursEvolution\Farseer Physics Engine 3.5\Farseer Physics DebugView 3.5\Content\</RootDirectory>
+      <LoggerRootDirectory>C:\Users\Freek\Documents\HonoursProject\HonoursEvolution\Farseer Physics Engine 3.5\Farseer Physics DebugView 3.5\</LoggerRootDirectory>
+      <IntermediateDirectory>C:\Users\Freek\Documents\HonoursProject\HonoursEvolution\Farseer Physics Engine 3.5\Farseer Physics DebugView 3.5\obj\x86\Debug\</IntermediateDirectory>
+      <OutputDirectory>C:\Users\Freek\Documents\HonoursProject\HonoursEvolution\Farseer Physics Engine 3.5\Farseer Physics DebugView 3.5\bin\x86\Debug\Content\</OutputDirectory>
     </Settings>
     <Assemblies>
       <Assembly>

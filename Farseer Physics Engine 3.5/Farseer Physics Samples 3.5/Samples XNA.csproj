@@ -89,6 +89,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Demos\Prefabs\Creature.cs" />
     <Compile Include="DrawingSystem\LineBatch.cs" />
     <Compile Include="Demos\AdvancedDemo1.cs" />
     <Compile Include="Demos\AdvancedDemo2.cs" />
