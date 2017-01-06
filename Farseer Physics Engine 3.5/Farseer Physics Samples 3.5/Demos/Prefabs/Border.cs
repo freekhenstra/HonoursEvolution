@@ -31,7 +31,7 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
             borders.Add(new Vector2(-halfWidth, -halfHeight));
 
             _anchor = BodyFactory.CreateLoopShape(world, borders);
-            _anchor.CollisionCategories = Category.All;
+            _anchor.CollisionCategories = Category.Cat1;
             _anchor.CollidesWith = Category.All;
 
             _basicEffect = new BasicEffect(screenManager.GraphicsDevice);

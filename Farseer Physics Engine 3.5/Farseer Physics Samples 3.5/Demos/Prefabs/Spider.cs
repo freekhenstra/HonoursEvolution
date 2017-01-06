@@ -55,7 +55,7 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
             _rightUpper.BodyType = BodyType.Dynamic;
 
             //Right lower leg
-            _rightLower = BodyFactory.CreateRectangle(world, _lowerLegSize.X, _lowerLegSize.Y, 0.1f, _circle.Position + new Vector2(SpiderBodyRadius, 0f) + new Vector2(_upperLegSize.X, 0f) + new Vector2(_lowerLegSize.X / 2f, 0f));
+            _rightLower = BodyFactory.CreateRectangle(world, _lowerLegSize.X, _lowerLegSize.Y, 0.1f, /*_circle.Position + new Vector2(SpiderBodyRadius, 0f) + new Vector2(_upperLegSize.X, 0f) +*/ new Vector2(_lowerLegSize.X / 2f, 0f));
             _rightLower.BodyType = BodyType.Dynamic;
 
             //Create joints
@@ -71,7 +71,7 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
             _leftKneeAngleJoint = JointFactory.CreateAngleJoint(world, _leftUpper, _leftLower);
             _leftKneeAngleJoint.MaxImpulse = 3f;
 
-            JointFactory.CreateRevoluteJoint(world, _rightUpper, _rightLower, new Vector2(-_lowerLegSize.X / 2f, 0f));
+            JointFactory.CreateRevoluteJoint(world, _rightUpper, _rightLower, new Vector2(_upperLegSize.X / 2f, 0f), new Vector2(-_lowerLegSize.X / 2f, 0f));
             _rightKneeAngleJoint = JointFactory.CreateAngleJoint(world, _rightUpper, _rightLower);
             _rightKneeAngleJoint.MaxImpulse = 3;
 
@@ -108,6 +108,12 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
 
             _leftShoulderAngleJoint.TargetAngle = _shoulderTargetAngle;
             _rightShoulderAngleJoint.TargetAngle = -_shoulderTargetAngle;
+
+            _leftKneeAngleJoint.Softness = 0.8f;
+            _rightKneeAngleJoint.Softness = 0.8f;
+
+            _leftShoulderAngleJoint.Softness = 0.8f;
+            _rightShoulderAngleJoint.Softness = 0.8f;
         }
 
         public void Draw()
