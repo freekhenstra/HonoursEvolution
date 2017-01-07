@@ -12,7 +12,7 @@ namespace FarseerPhysics.Samples.Demos
         private Agent _agent;
         private Border _border;
         private Spider[] _spiders;
-        private Creature creature, creature2, creature3, creature4, creature5;
+        private Creature finalCreature;
 
         #region IDemoScreen Members
 
@@ -72,42 +72,55 @@ namespace FarseerPhysics.Samples.Demos
             
             creature = new Creature(World, corners, ScreenManager, new Vector2(2f, 6f));*/
 
-            float[] movement = new float[] { 1f, -1f, 1f, -1f };
-            float[] movement2 = new float[] { -0.5f, 0.5f, -1.2f, 1.2f };
-
+            float[] movement = new float[] { 1f, 0f, -1f, -0f, 1f, 0f, -1f, -0f };
+            float[] movement2 = new float[] { 0f, -1f, -0f, 1f, 0f, -1f, -0f, 1f };
+            float[] movement3 = new float[] { -1f, -0f, 1f, 0f, -1f, -0f, 1f, 0f };
+            float[] movement4 = new float[] { -0f, 1f, 0f, -1f, -0f, 1f, 0f, -1f };
+            
             List<Corner> corners = new List<Corner>();
-            corners.Add(new Corner(0.5f, 2f, null, null));
-            corners.Add(new Corner(0f, 5f, null, null));
-            corners.Add(new Corner(-0.5f, 3f, null, null));
+            corners.Add(new Corner(0.2f, 0.7f, null, null));
+            corners.Add(new Corner(0f, 2f, null, null));
+            corners.Add(new Corner(-0.2f, 0.7f, null, null));
 
-            creature = new Creature(World, corners, ScreenManager, new Vector2(2f, 6f));
-
+            Creature creature = new Creature(World, corners, ScreenManager, new Vector2(2f, 6f));
+            
             List<Corner> corners2 = new List<Corner>();
-            corners2.Add(new Corner(0.5f, 2f, null, null));
-            corners2.Add(new Corner(-0.5f, 3f, creature, movement));
+            corners2.Add(new Corner(0.1f, 2f, null, null));
+            corners2.Add(new Corner(0f, 2.7f, creature, movement));
+            corners2.Add(new Corner(-0.1f, 2f, null, null));
 
-            creature2 = new Creature(World, corners2, ScreenManager, new Vector2(2f, 6f));
+            Creature creature2 = new Creature(World, corners2, ScreenManager, new Vector2(2f, 6f));
 
             List<Corner> corners3 = new List<Corner>();
-            corners3.Add(new Corner(0.5f, 2f, null, null));
-            corners3.Add(new Corner(0f, 5f, null, null));
-            corners3.Add(new Corner(-0.5f, 3f, null, null));
+            corners3.Add(new Corner((float)Math.PI / 4, (float)Math.Sqrt(8), creature2, movement2));
+            corners3.Add(new Corner(0f, 6f, null, null));
+            corners3.Add(new Corner((float)-Math.PI / 4, (float)Math.Sqrt(8), creature2.Clone(), movement2));
 
-            creature3 = new Creature(World, corners3, ScreenManager, new Vector2(2f, 6f));
+            Creature creature3 = new Creature(World, corners3, ScreenManager, new Vector2(2f, 6f));
 
             List<Corner> corners4 = new List<Corner>();
-            corners4.Add(new Corner(0.5f, 2f, null, null));
-            corners4.Add(new Corner(-0.5f, 3f, creature3, movement));
+            corners4.Add(new Corner(0.4f, 1.7f, null, null));
+            corners4.Add(new Corner(0f, 2f, null, null));
+            corners4.Add(new Corner(-0.4f, 1.7f, null, null));
 
-            creature4 = new Creature(World, corners4, ScreenManager, new Vector2(2f, 6f));
+            Creature creature4 = new Creature(World, corners4, ScreenManager, new Vector2(2f, 6f));
 
             List<Corner> corners5 = new List<Corner>();
-            corners5.Add(new Corner(0.5f, 2f, null, null));
-            corners5.Add(new Corner(0.1f, 6f, creature2, movement2));
-            corners5.Add(new Corner(-0.2f, 5f, creature4, movement2));
-            corners5.Add(new Corner(-0.5f, 3f, null, null));
+            corners5.Add(new Corner(0.1f, 2f, null, null));
+            corners5.Add(new Corner(0f, 4f, creature4, movement3));
+            corners5.Add(new Corner(-0.1f, 2f, null, null));
 
-            creature5 = new Creature(World, corners5, ScreenManager, new Vector2(2f, 6f));
+            Creature creature5 = new Creature(World, corners5, ScreenManager, new Vector2(2f, 6f));
+
+            List<Corner> corners6 = new List<Corner>();
+            corners6.Add(new Corner((float)Math.PI / 4, (float)Math.Sqrt(8), creature5, movement4));
+            corners6.Add(new Corner(0f, 4f, null, null));
+            corners6.Add(new Corner((float)-Math.PI / 4, (float)Math.Sqrt(8), creature5.Clone(), movement4));
+
+            Creature creature6 = new Creature(World, corners6, ScreenManager, new Vector2(2f, 6f));
+
+            //finalCreature = Creature.CreateOffspring(creature3, creature6, new Random());
+            finalCreature = Creature.CreateFirstGen(World, ScreenManager, Vector2.Zero, new Random())[0];
 
             //for (int i = 0; i < _spiders.Length; i++)
             //{
@@ -125,7 +138,7 @@ namespace FarseerPhysics.Samples.Demos
                 //{
                 //    _spiders[i].Update(gameTime);
                 //}
-                creature5.Update(gameTime);
+                finalCreature.Update(gameTime);
             }
 
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
@@ -135,7 +148,7 @@ namespace FarseerPhysics.Samples.Demos
         {
             ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
             //_agent.Draw();
-            creature5.Draw();
+            finalCreature.Draw();
             //for (int i = 0; i < _spiders.Length; i++)
             //{
             //    _spiders[i].Draw();
