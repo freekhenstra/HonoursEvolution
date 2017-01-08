@@ -15,49 +15,52 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
 {
     public class LiveCreature
     {
-        public Creature creature;
-        public List<LiveCorner> corners;
+
+    }
+
+    public class Creature
+    {
         public Body body;
+        private List<Corner> corners;
         private Vertices verts;
         private Vertices massVerts;
         public Vector2 offset;
         private float time;
         private int movementStep;
+
         private SpriteBatch batch;
         private Sprite sprite;
         private World world;
         private ScreenManager screenManager;
         private Vector2 position;
 
-        public LiveCreature(Creature _creature, World _world, ScreenManager _screenManager, Vector2 _position)
+        public Creature(World _world, List<Corner> _corners, ScreenManager _screenManager, Vector2 _position)
         {
-            creature = _creature;
             world = _world;
             screenManager = _screenManager;
             position = _position;
             batch = screenManager.SpriteBatch;
-
-            corners = new List<LiveCorner>();
+            corners = _corners;
             verts = new Vertices();
             verts.Add(Vector2.Zero);
-            foreach (Corner c in creature.corners)
-            {
-                LiveCorner lc = new LiveCorner(c, world, screenManager, position);
-                corners.Add(lc);
-                verts.Add(lc.vector);
-            }
+            foreach (Corner c in corners)
+                verts.Add(c.vector);
             offset = Offset(verts);
             Vertices newVerts = new Vertices();
             foreach (Vector2 v in verts)
+            {
                 newVerts.Add(v + offset);
+            }
             body = BodyFactory.CreatePolygon(world, newVerts, 0.05f);
             body.BodyType = BodyType.Dynamic;
             massVerts = new Vertices();
             foreach (Vector2 v in newVerts)
+            {
                 massVerts.Add(v - body.LocalCenter);
+            }
             body.CollidesWith = Category.Cat1;
             body.CollisionCategories = Category.Cat2;
-            foreach (LiveCorner c in corners)
+            foreach (Corner c in corners)
             {
                 if (c.limb != null)
                 {
@@ -103,7 +106,7 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
                     force += normal * normalVelocity * normalVelocity * 0.01f;
             }
             body.ApplyForce(force);
-            foreach (LiveCorner c in corners)
+            foreach (Corner c in corners)
             {
                 if (c.limb != null)
                 {
@@ -116,7 +119,7 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
         public void Draw()
         {
             batch.Draw(sprite.Texture, ConvertUnits.ToDisplayUnits(body.Position), null, Color.White, body.Rotation, sprite.Origin, 1f, SpriteEffects.None, 0f);
-            foreach (LiveCorner c in corners)
+            foreach (Corner c in corners)
             {
                 if (c.limb != null)
                 {
@@ -130,7 +133,7 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
             float minX = 0;
             float maxX = 0;
             float minY = 0;
-            float maxY = 0;
+            float maxY = 0; 
             foreach (Vector2 v in _verts)
             {
                 if (v.X < minX)
@@ -152,77 +155,24 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
             return new Vector2(newX, newY);
         }
 
-        public void Kill()
-        {
-            foreach (LiveCorner c in corners)
-            {
-                if (c.limb != null)
-                {
-                    c.limb.creature.Kill();
-                }
-            }
-            body.Dispose();
-        }
-    }
-
-    public class LiveCorner
-    {
-        public Corner corner;
-        public LiveLimb limb;
-        public Vector2 vector;
-        public float defAngle;
-
-        public LiveCorner(Corner _corner, World _world, ScreenManager _screenManager, Vector2 _position)
-        {
-            corner = _corner;
-            if (corner.limb != null)
-                limb = new LiveLimb(corner.limb, _world, _screenManager, _position);
-            vector = new Vector2((float)Math.Cos(corner.angle) * corner.radius, (float)Math.Sin(corner.angle) * corner.radius);
-        }
-    }
-
-    public class LiveLimb
-    {
-        public Limb limb;
-        public LiveCreature creature;
-        public float[] movement;
-        public AngleJoint joint;
-
-        public LiveLimb(Limb _limb, World _world, ScreenManager _screenManager, Vector2 _position)
-        {
-            limb = _limb;
-            creature = new LiveCreature(limb.creature, _world, _screenManager, _position);
-            movement = limb.movement;
-        }
-    }
-
-    public class Creature
-    {
-        public List<Corner> corners;
-
-        public Creature(List<Corner> corners)
-        {
-            this.corners = corners;
-        }
-
         public static Creature[] CreateFirstGen(World _world, ScreenManager _screenManager, Vector2 _position, Random r)
         {
-            Creature[] firstGen = new Creature[100];
-            for (int i = 0; i < 100; i++)
+            Creature[] firstGen = new Creature[36];
+            for (int i = 0; i < 36; i++)
             {
-                Creature creature = new Creature(RandomCorners(r));
+                Creature creature = new Creature(_world, RandomCorners(r), _screenManager, _position);
                 creature.Mutate(r, 0);
-                firstGen[i] = creature;
+                firstGen[i] = creature.Clone();
             }
             return firstGen;
         }
 
         public static Creature[] CreateNewGen(Creature[] fittestCreatures, Random r)
         {
-            Creature[] offspring = new Creature[100];
-            for (int i = 0; i < 10; i += 2)
+            Creature[] offspring = new Creature[36];
+            for (int i = 0; i < 6; i += 2)
             {
-                for (int j = 0; j < 20; j++)
+                for (int j = 0; j < 12; j++)
                 {
                     offspring[j + 20 * i] = CreateOffspring(fittestCreatures[i], fittestCreatures[i + 1], r);
                 }
@@ -234,11 +184,19 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
         {
             List<Limb> limbs = new List<Limb>();
             foreach (Corner c in mom.corners)
+            {
                 if (c.limb != null)
+                {
                     limbs.Add(c.limb);
+                }
+            }
             foreach (Corner c in dad.corners)
+            {
                 if (c.limb != null)
+                {
                     limbs.Add(c.limb);
+                }
+            }
             Creature child;
             if (r.Next(2) == 0)
                 child = mom;
@@ -252,7 +210,7 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
                         c.limb = null;
                         break;
                     case 1:
-                        c.limb = limbs[r.Next(limbs.Count)];
+                        c.AddLimb(limbs[r.Next(limbs.Count)]);
                         break;
                     default:
                         break;
@@ -267,18 +225,16 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
             List<Corner> newCorners = new List<Corner>();
             foreach (Corner c in corners)
             {
-                Creature newCreature = null;
+                Creature newLimb = null;
                 float[] newMovement = null;
-                Limb newLimb = null;
                 if (c.limb != null)
                 {
-                    newCreature = c.limb.creature.Clone();
+                    newLimb = c.limb.creature.Clone();
                     newMovement = c.limb.movement;
-                    newLimb = new Limb(newCreature, newMovement);
                 }
-                newCorners.Add(new Corner(c.angle, c.radius, newLimb));
+                newCorners.Add(new Corner(c.angle, c.radius, newLimb, newMovement));
             }
-            Creature clone = new Creature(newCorners);
+            Creature clone = new Creature(world, newCorners, screenManager, position);
             return clone;
         }
 
@@ -330,7 +286,7 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
                 {
                     if (r.Next(40) == 0 && depth < 5)
                     {
-                        c.limb = new Limb(new Creature(RandomCorners(r)), RandomMovement(r));
+                        c.limb = new Limb(new Creature(world, RandomCorners(r), screenManager, position), RandomMovement(r));
                     }
                 }
             }
@@ -359,7 +315,7 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
         {
             float angle = (float)r.NextDouble() * (float)Math.PI - (float)Math.PI / 2;
             float radius = (float)r.NextDouble() * 6f + 1f;
-            return new Corner(angle, radius, null);
+            return new Corner(angle, radius, null, null);
         }
 
         public static List<Corner> CheckCorners(List<Corner> _corners)
@@ -390,18 +346,40 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
             }
             return _corners;
         }
+
+        public void Kill()
+        {
+            foreach (Corner c in corners)
+            {
+                if (c.limb != null)
+                {
+                    c.limb.creature.Kill();
+                }
+            }
+            body.Dispose();
+        }
     }
 
     public class Corner
     {
-        public float angle, radius;
+        public float angle, radius, defAngle;
         public Limb limb;
+        public Vector2 vector;
 
-        public Corner(float angle, float radius, Limb limb)
+        public Corner(float _angle, float _radius, Creature _limb, float[] _movement)
         {
-            this.angle = angle;
-            this.radius = radius;
-            this.limb = limb;
+            angle = _angle;
+            radius = _radius;
+            if (_limb != null)
+                limb = new Limb(_limb, _movement);
+            vector = new Vector2((float)Math.Cos(angle) * radius, (float)Math.Sin(angle) * radius);
+        }
+
+        public void AddLimb(Limb _limb)
+        {
+            Debug.WriteLine(_limb.movement.ToString());
+            if (_limb != null)
+                limb = new Limb(_limb.creature.Clone(), _limb.movement);
         }
     }
 
@@ -409,11 +387,12 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
     {
         public Creature creature;
         public float[] movement;
+        public AngleJoint joint;
 
-        public Limb(Creature creature, float[] movement)
+        public Limb(Creature _creature, float[] _movement)
         {
-            this.creature = creature;
-            this.movement = movement;
+            creature = _creature;
+            movement = _movement;
         }
     }
 }

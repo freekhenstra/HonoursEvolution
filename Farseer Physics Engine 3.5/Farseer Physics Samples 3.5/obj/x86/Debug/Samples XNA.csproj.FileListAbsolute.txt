@@ -112,3 +112,6 @@ C:\Users\Freek\Documents\HonoursProject\HonoursEvolution\Farseer Physics Engine 
 C:\Users\Freek\Documents\HonoursProject\HonoursEvolution\Farseer Physics Engine 3.5\Farseer Physics Samples 3.5\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
 C:\Users\Freek\Documents\HonoursProject\HonoursEvolution\Farseer Physics Engine 3.5\Farseer Physics Samples 3.5\obj\x86\Debug\Samples XNA.exe
 C:\Users\Freek\Documents\HonoursProject\HonoursEvolution\Farseer Physics Engine 3.5\Farseer Physics Samples 3.5\obj\x86\Debug\Samples XNA.pdb
+C:\Users\Freek\Documents\HonoursProject\HonoursEvolution\Farseer Physics Engine 3.5\Farseer Physics Samples 3.5\bin\x86\Debug\Samples XNA.exe.config
+C:\Users\Freek\Documents\HonoursProject\HonoursEvolution\Farseer Physics Engine 3.5\Farseer Physics Samples 3.5\bin\x86\Debug\Newtonsoft.Json.dll
+C:\Users\Freek\Documents\HonoursProject\HonoursEvolution\Farseer Physics Engine 3.5\Farseer Physics Samples 3.5\bin\x86\Debug\Newtonsoft.Json.xml
