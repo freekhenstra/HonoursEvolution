@@ -28,8 +28,11 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
         private World world;
         private ScreenManager screenManager;
         private Vector2 position;
+        private float speedMed;
+        private float strengthMed;
+        private float rangeMed;
 
-        public LiveCreature(Creature _creature, World _world, ScreenManager _screenManager, Vector2 _position)
+        public LiveCreature(Creature _creature, World _world, ScreenManager _screenManager, Vector2 _position, bool[] _medicine)
         {
             creature = _creature;
             world = _world;
@@ -37,12 +40,25 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
             position = _position;
             batch = screenManager.SpriteBatch;
 
+            if (_medicine[0])
+                speedMed = 50f;
+            else
+                speedMed = 100f;
+            if (_medicine[1])
+                strengthMed = -0.8f;
+            else
+                strengthMed = 0.8f;
+            if (_medicine[2])
+                rangeMed = 2f;
+            else
+                rangeMed = 1f;
+
             corners = new List<LiveCorner>();
             verts = new Vertices();
             verts.Add(Vector2.Zero);
             foreach (Corner c in creature.corners)
             {
-                LiveCorner lc = new LiveCorner(c, world, screenManager, position);
+                LiveCorner lc = new LiveCorner(c, world, screenManager, position, _medicine);
                 corners.Add(lc);
                 verts.Add(lc.vector);
             }
@@ -66,8 +82,8 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
                     RevoluteJoint j = JointFactory.CreateRevoluteJoint(world, body, c.limb.creature.body, vecOff, c.limb.creature.offset);
                     c.limb.joint = JointFactory.CreateAngleJoint(world, body, c.limb.creature.body);
                     c.limb.joint.MaxImpulse = 3f;
-                    c.limb.joint.TargetAngle = c.defAngle + c.limb.movement[0];
-                    c.limb.joint.Softness = 0.5f;
+                    c.limb.joint.TargetAngle = c.defAngle + c.limb.movement[0] * rangeMed;
+                    c.limb.joint.Softness = strengthMed;
                 }
             }
             AssetCreator creator = screenManager.Assets;
@@ -77,7 +93,7 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
         public void Update(GameTime gameTime)
         {
             time += gameTime.ElapsedGameTime.Milliseconds;
-            if (time > 100)
+            if (time > speedMed)
             {
                 time = 0;
                 if (movementStep == 7)
@@ -107,7 +123,7 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
             {
                 if (c.limb != null)
                 {
-                    c.limb.joint.TargetAngle = c.defAngle + c.limb.movement[movementStep];
+                    c.limb.joint.TargetAngle = c.defAngle + c.limb.movement[movementStep] * rangeMed;
                     c.limb.creature.Update(gameTime);
                 }
             }
@@ -172,11 +188,11 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
         public Vector2 vector;
         public float defAngle;
 
-        public LiveCorner(Corner _corner, World _world, ScreenManager _screenManager, Vector2 _position)
+        public LiveCorner(Corner _corner, World _world, ScreenManager _screenManager, Vector2 _position, bool[] _medicine)
         {
             corner = _corner;
             if (corner.limb != null)
-                limb = new LiveLimb(corner.limb, _world, _screenManager, _position);
+                limb = new LiveLimb(corner.limb, _world, _screenManager, _position, _medicine);
             vector = new Vector2((float)Math.Cos(corner.angle) * corner.radius, (float)Math.Sin(corner.angle) * corner.radius);
         }
     }
@@ -188,10 +204,10 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
         public float[] movement;
         public AngleJoint joint;
 
-        public LiveLimb(Limb _limb, World _world, ScreenManager _screenManager, Vector2 _position)
+        public LiveLimb(Limb _limb, World _world, ScreenManager _screenManager, Vector2 _position, bool[] _medicine)
         {
             limb = _limb;
-            creature = new LiveCreature(limb.creature, _world, _screenManager, _position);
+            creature = new LiveCreature(limb.creature, _world, _screenManager, _position, _medicine);
             movement = limb.movement;
         }
     }
@@ -258,8 +274,9 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
                         break;
                 }
             }
+            child = child.Clone();
             child.Mutate(r, 0);
-            return child.Clone();
+            return child;
         }
 
         public Creature Clone()
@@ -267,13 +284,11 @@ namespace FarseerPhysics.Samples.Demos.Prefabs
             List<Corner> newCorners = new List<Corner>();
             foreach (Corner c in corners)
             {
-                Creature newCreature = null;
-                float[] newMovement = null;
                 Limb newLimb = null;
                 if (c.limb != null)
                 {
-                    newCreature = c.limb.creature.Clone();
-                    newMovement = c.limb.movement;
+                    Creature newCreature = c.limb.creature.Clone();
+                    float[] newMovement = c.limb.movement;
                     newLimb = new Limb(newCreature, newMovement);
                 }
                 newCorners.Add(new Corner(c.angle, c.radius, newLimb));

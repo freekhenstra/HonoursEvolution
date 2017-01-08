@@ -14,7 +14,7 @@ namespace FarseerPhysics.Samples.Demos
         private Agent _agent;
         private Border _border;
         private Spider[] _spiders;
-        private LiveCreature finalCreature;
+        private LiveCreature finalCreature, finalCreature2;
 
         #region IDemoScreen Members
 
@@ -78,14 +78,14 @@ namespace FarseerPhysics.Samples.Demos
             float[] movement2 = new float[] { 0f, -1f, -0f, 1f, 0f, -1f, -0f, 1f };
             float[] movement3 = new float[] { -1f, -0f, 1f, 0f, -1f, -0f, 1f, 0f };
             float[] movement4 = new float[] { -0f, 1f, 0f, -1f, -0f, 1f, 0f, -1f };
-            
+
             List<Corner> corners = new List<Corner>();
             corners.Add(new Corner(0.2f, 0.7f, null));
             corners.Add(new Corner(0f, 2f, null));
             corners.Add(new Corner(-0.2f, 0.7f, null));
 
             Creature creature = new Creature(corners);
-            
+
             List<Corner> corners2 = new List<Corner>();
             corners2.Add(new Corner(0.1f, 2f, null));
             corners2.Add(new Corner(0f, 2.7f, new Limb(creature, movement)));
@@ -125,12 +125,13 @@ namespace FarseerPhysics.Samples.Demos
 
             Creature creature8 = Creature.CreateFirstGen(World, ScreenManager, Vector2.Zero, new Random())[0];
 
-            string outputJSON = JsonConvert.SerializeObject(creature8);
+            string outputJSON = JsonConvert.SerializeObject(creature7);
             File.WriteAllText("Output.json", outputJSON);
             string JSONstring = File.ReadAllText("Output.json");
             Creature creature9 = JsonConvert.DeserializeObject<Creature>(JSONstring);
 
-            finalCreature = new LiveCreature(creature8, World, ScreenManager, Vector2.Zero);
+            finalCreature = new LiveCreature(creature9, World, ScreenManager, Vector2.Zero, new bool[] { false, false, false });
+            finalCreature2 = new LiveCreature(creature9, World, ScreenManager, Vector2.Zero, new bool[] { true, true, true });
 
             //for (int i = 0; i < _spiders.Length; i++)
             //{
@@ -149,6 +150,7 @@ namespace FarseerPhysics.Samples.Demos
                 //    _spiders[i].Update(gameTime);
                 //}
                 finalCreature.Update(gameTime);
+                finalCreature2.Update(gameTime);
             }
 
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
@@ -159,6 +161,7 @@ namespace FarseerPhysics.Samples.Demos
             ScreenManager.SpriteBatch.Begin(0, null, null, null, null, null, Camera.View);
             //_agent.Draw();
             finalCreature.Draw();
+            finalCreature2.Draw();
             //for (int i = 0; i < _spiders.Length; i++)
             //{
             //    _spiders[i].Draw();
